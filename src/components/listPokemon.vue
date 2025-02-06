@@ -22,6 +22,7 @@ const isError = ref(false)
 const searchPokemon = ref('')
 const fullPokemonList = ref<Pokemon[]>([])
 const filteredPokemonList = ref<Pokemon[]>([])
+const suggestions = ref<string[]>([]) // Array per i suggerimenti
 const lightbox = ref<null | ReturnType<typeof GLightbox>>(null)
 
 const fetchData = async () => {
@@ -70,11 +71,14 @@ const fetchData = async () => {
 watch(searchPokemon, (nameOfPokemon) => {
   if (nameOfPokemon.trim() === '') {
     filteredPokemonList.value = [...fullPokemonList.value]
+    suggestions.value = [] // Azzera i suggerimenti
   } else {
     const filteredPokemons = fullPokemonList.value.filter((pokemon) =>
       pokemon.name.toLowerCase().includes(nameOfPokemon.toLowerCase()),
     )
     filteredPokemonList.value = filteredPokemons
+    // Popola i suggerimenti con i nomi dei Pokémon che corrispondono alla ricerca
+    suggestions.value = filteredPokemons.map((pokemon) => pokemon.name)
   }
   // Inizializza GLightbox dopo che il DOM è stato aggiornato
   nextTick(() => {
@@ -92,6 +96,12 @@ watch(searchPokemon, (nameOfPokemon) => {
 onMounted(() => {
   fetchData()
 })
+
+// Metodo per selezionare un suggerimento
+const selectSuggestion = (suggestion: string) => {
+  searchPokemon.value = suggestion
+  suggestions.value = [] // Pulisce i suggerimenti dopo la selezione
+}
 </script>
 
 <template>
@@ -111,14 +121,28 @@ onMounted(() => {
     <div v-else>
       <div class="bg-blue mx-auto flex justify-center w-72 relative items-center">
         <input
+          ref="autocompleteInput"
           type="text"
-          name=""
-          id=""
           placeholder="Cerca il tuo pokemon"
           class="border-2 px-3 py-2 w-full relative rounded-2xl"
           v-model="searchPokemon"
         />
         <i class="pi pi-search text-xl absolute right-2"></i>
+        <div
+          v-if="suggestions.length"
+          class="absolute bg-white w-full max-h-60 overflow-y-auto border rounded-xl mt-1 shadow-md z-10 top-[40px]"
+        >
+          <ul>
+            <li
+              v-for="(suggestion, index) in suggestions"
+              :key="index"
+              @click="selectSuggestion(suggestion)"
+              class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+            >
+              {{ suggestion }}
+            </li>
+          </ul>
+        </div>
       </div>
       <ul class="grid grid-cols-2 gap-10 my-10 md:grid-cols-3 lg:grid-cols-4">
         <li
