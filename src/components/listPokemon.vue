@@ -101,8 +101,7 @@ onMounted(() => {
     <img
       src="../assets/images/ash.png"
       alt="foto ash"
-      class="w-30 absolute right-16 top-[-140px] drop-shadow-2xl shadow-black"
-      loading="lazy"
+      class="w-28 absolute right-0 lg:right-16 top-[-135px] drop-shadow-2xl shadow-black"
     />
     <div v-if="isError" class="w-full text-center">
       <h1 class="text-3xl font-semibold">Ops! Qualcosa è andato storto!</h1>
@@ -127,7 +126,7 @@ onMounted(() => {
           :key="idx"
           class="cursor-pointer flex flex-col items-center gap-5"
         >
-          <div class="w-32 h-32">
+          <div class="w-28 h-28 lg:w-32 lg:h-32 xl:w-32 xl:h-32">
             <a
               :href="
                 pokemon.sprites.other.dream_world.front_default ?? pokemon.sprites.front_default
