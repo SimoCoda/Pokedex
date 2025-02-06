@@ -102,6 +102,7 @@ onMounted(() => {
       src="../assets/images/ash.png"
       alt="foto ash"
       class="w-30 absolute right-16 top-[-140px] drop-shadow-2xl shadow-black"
+      loading="lazy"
     />
     <div v-if="isError" class="w-full text-center">
       <h1 class="text-3xl font-semibold">Ops! Qualcosa è andato storto!</h1>
